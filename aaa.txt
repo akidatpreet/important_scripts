@@ -1,4 +1,6 @@
-1
-2
-3
-
+#!/bin/bash
+file="/root/terraform/new-instance/output.txt"
+while IFS= read line
+do
+        aws cloudwatch put-metric-alarm --alarm-name "$line"cpu_alarm --alarm-description "Alarm when CPU exceeds 30%" --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 300 --threshold 30 --comparison-operator GreaterThanThreshold --dimensions  Name=InstanceId,Value="$line" --evaluation-periods 3 --alarm-actions arn:aws:sns:us-east-1:920470437221:Default_CloudWatch_Alarms_Topic --unit Percent
+        done <"$file"
